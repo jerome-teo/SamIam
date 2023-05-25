@@ -79,7 +79,9 @@ public class InOutDegreeProperty extends AbstractEnumProperty
 
 	public static InOutDegree valueFor( Variable var, BeliefNetwork bn )
 	{
-		if( bn.inDegree( var ) < (int)1 ) return ROOT;
+		int indegreeIntervened = 0;
+		if (bn.getIntervenedVariables().contains(var) ) indegreeIntervened += 1;
+		if( bn.inDegree( var ) + indegreeIntervened < (int)1 ) return ROOT;
 		else if( bn.outDegree( var ) < (int)1 ) return LEAF;
 		else return INTERNAL;
 	}

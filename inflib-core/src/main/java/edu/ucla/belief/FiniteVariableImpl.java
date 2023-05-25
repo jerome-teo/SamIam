@@ -168,6 +168,22 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 		else return (CPTShell) myMapTypesToShells.get( type );
 	}
 
+	/** @since 20230524 */
+	/**
+	 * This function is specifically used for returning the CPT shell for the probability table
+	 * shown to users. Upon interventions, we want to show the original CPT rather than the 
+	 * intervened CPT. Additionally, we want to modify the original CPT rather than the intervened
+	 * CPT upon any changes made by the user or through network structure changes.
+	 */
+	public CPTShell getCPTShell( DSLNodeType type, boolean checkIntervened ){
+		if( checkIntervened && savedCPT != null && type == myDSLNodeType) {
+			return savedCPT;
+		} 
+		else {
+			return getCPTShell( type );
+		}
+	}
+
 	/** @since 010905 */
 	public void setCPTShell( DSLNodeType type, CPTShell shell ){
 		if( (shell == null) && (myMapTypesToShells != null) ){
@@ -176,6 +192,18 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 		}
 		if( myMapTypesToShells == null ) myMapTypesToShells = new IdentityArrayMap();
 		myMapTypesToShells.put( type, shell );
+	}
+
+	/** @since 20230524 */
+	public void setIntervenedCPTShell( DSLNodeType type, CPTShell shell ){
+		savedCPT = (CPTShell) myMapTypesToShells.get( type );
+		setCPTShell( type, shell );
+	} 
+
+	/** @since 20230524 */
+	public void setUnintervenedCPTShell( DSLNodeType type ){
+		setCPTShell( type, savedCPT );
+		savedCPT = null;
 	}
 
 	/** @since 010905 */
@@ -303,4 +331,5 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 	//private CPTShell myCPTShell;
 	private Map myMapTypesToShells;
 	private DSLNodeType myDSLNodeType = DSLNodeType.CPT;
+	private CPTShell savedCPT = null;
 }

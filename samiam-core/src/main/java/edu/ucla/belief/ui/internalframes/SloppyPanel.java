@@ -384,7 +384,7 @@ public class SloppyPanel extends JPanel implements ActionListener, ChangeListene
 
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.WEST;
-		inner.add( label = new JLabel( "P(MAP,e)" ) );
+		inner.add( label = new JLabel( "P(MAP,e_obs|e_int)" ) );
 		Font newFont = label.getFont().deriveFont( (float)20 );
 		label.setFont( newFont );
 		inner.add( label = new JLabel( " = " ) );
@@ -394,7 +394,7 @@ public class SloppyPanel extends JPanel implements ActionListener, ChangeListene
 		myLabelScoreJoint.setFont( newFont );
 
 		c.gridwidth = 1;
-		inner.add( label = new JLabel( "P(MAP|e)" ) );
+		inner.add( label = new JLabel( "P(MAP|e_obs,e_int)" ) );
 		label.setFont( newFont );
 		inner.add( label = new JLabel( " = " ) );
 		label.setFont( newFont );

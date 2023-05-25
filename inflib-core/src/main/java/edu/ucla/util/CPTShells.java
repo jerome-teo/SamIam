@@ -32,7 +32,7 @@ public class CPTShells
 		if( report_exceptions ){ clear(); }
 		for( int i=0; i<NUMTYPES; i++ ){
 			try{
-				doTask( var, ARRAYTYPES[i], var.getCPTShell( ARRAYTYPES[i] ) );
+				doTask( var, ARRAYTYPES[i], var.getCPTShell( ARRAYTYPES[i], true ) );
 			}catch( Throwable throwable ){
 				if( thrown == null ){ thrown = new LinkedList(); }
 				thrown.add( throwable );

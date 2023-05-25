@@ -174,8 +174,17 @@ public class DisplayableFiniteVariableImpl implements DisplayableFiniteVariable,
 	public CPTShell getCPTShell( DSLNodeType type ){
 		return myFiniteVariable.getCPTShell( type );
 	}
+	public CPTShell getCPTShell( DSLNodeType type, boolean checkIntervened ){
+		return myFiniteVariable.getCPTShell(type, checkIntervened);
+	}
 	public void setCPTShell( DSLNodeType type, CPTShell shell ){
 		myFiniteVariable.setCPTShell( type, shell );
+	}
+	public void setIntervenedCPTShell( DSLNodeType type, CPTShell shell ){
+		myFiniteVariable.setIntervenedCPTShell(type, shell);
+	}
+	public void setUnintervenedCPTShell( DSLNodeType type ){
+		myFiniteVariable.setUnintervenedCPTShell(type);
 	}
 	public DSLNodeType getDSLNodeType(){
 		return myFiniteVariable.getDSLNodeType();

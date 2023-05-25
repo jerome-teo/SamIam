@@ -118,7 +118,7 @@ public class CPTEditor extends ArrayStyleEditor
 			errmsg = HuginGenieStyleTableFactory.validate( myDisplayableFiniteVariable, myWeights );
 			if( errmsg == null )
 			{
-				Table tempTable = myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT ).getCPT();
+				Table tempTable = myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT, true ).getCPT();
 				if( tempTable.getCPLength() != myWeights.length ) return "Java warning data length != new values length.";
 				else
 				{
@@ -147,7 +147,7 @@ public class CPTEditor extends ArrayStyleEditor
 	{
 		if( edu.ucla.belief.ui.UI.FLAG_GENIE_STYLE_CPT_EDIT )
 		{
-			myWeights = (double[]) myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT ).getCPT().dataclone();
+			myWeights = (double[]) myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT, true ).getCPT().dataclone();
 			boolean[] excludeArray = myDisplayableFiniteVariable.getExcludeArray();
 			if( excludeArray != null ) myExclude = (boolean[]) excludeArray.clone();
 			JComponent ret = makeCPTEditComponent( (DataHandler)null, /*flagAddButtons*/true );
@@ -180,7 +180,7 @@ public class CPTEditor extends ArrayStyleEditor
 		if( hnInternalFrame != null ) flagEditable &= !hnInternalFrame.getSamiamUserMode().contains( SamiamUserMode.READONLY );
 		myTempWrapper =
 			myHuginGenieStyleTableFactory.makeCPTJComponent( myDisplayableFiniteVariable,
-									myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT ).index().getParents(),
+									myDisplayableFiniteVariable.getCPTShell( DSLNodeType.CPT, true ).index().getParents(),
 									myWeights,
 									myExclude,
 									flagEditable,

@@ -79,5 +79,8 @@ public interface FiniteVariable extends Variable
 	//public CPTShell getOtherShell();
 	//public void setOtherShell( CPTShell shell );
 	public CPTShell getCPTShell( DSLNodeType type );
+	public CPTShell getCPTShell( DSLNodeType type, boolean checkIntervened );
 	public void setCPTShell( DSLNodeType type, CPTShell shell );
+	public void setIntervenedCPTShell( DSLNodeType type, CPTShell shell );
+	public void setUnintervenedCPTShell( DSLNodeType type );
 }

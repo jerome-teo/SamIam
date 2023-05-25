@@ -763,10 +763,12 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 		if( FLAG_DEBUG ) Definitions.STREAM_VERBOSE.println( "seeds: " + oldToNew.values() );
 
 		BeliefNetwork ret = seededClone( oldToNew );
-		if( ret.getEvidenceController() == null )
+		if( ret.getEvidenceController() == null)
 		{
 			ret.setEvidenceController( (EvidenceController) myEvidenceController.clone() );
 		}
+
+		ret.setIntervenedEdges(intervenedEdges);
 
 		if( ret instanceof BeliefNetworkImpl ) ((BeliefNetworkImpl)ret).setupUserEnumProperties( this.getUserEnumProperties() );
 
@@ -948,6 +950,17 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 		return this;
 	}
 
+	/** Sets intervened edges to given list */
+	public void setIntervenedEdges(Set toCopyIntervenedEdges) 
+	{
+		intervenedEdges = new HashSet();
+		for( Iterator itr = toCopyIntervenedEdges.iterator(); itr.hasNext(); )
+		{
+			List edge = (List) itr.next();
+			intervenedEdges.add(new ArrayList<>(edge));
+		}
+	}
+
 	/**
 	 * Returns set of intervened edges (from, to)
 	 * @since 20230421
@@ -1019,11 +1032,32 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 	 */
 	public boolean interveneEdge( Variable from, Variable to )
 	{
-		if( removeEdgeNoCPTChanges( from, to ) ) {
+		if (!structure.containsEdge(from, to)) {
+			throw new IllegalArgumentException("Doesn't contain that edge");
+		}
+
+		fireAudit( from, to, null, Auditor.Deed.DROP_EDGE );
+
+		if( structure.removeEdge(from, to) )
+		{
 			intervenedEdges.add( Arrays.asList(from, to));
+
+			FiniteVariable fv = (FiniteVariable) to;
+
+			// create new temp CPT for intervened variable 
+			double[] vals = new double[fv.size()];
+			java.util.Arrays.fill(vals, 0);
+			Table t = new Table( new ArrayList(Collections.singleton(fv)),vals );
+			Object[] intervenedVal = {myEvidenceController.getIntervenedValue(fv)};
+			TableIndex index = t.index();
+			Integer valIndex = index.index(intervenedVal);
+			t.setCP(valIndex, 1);
+
+			fv.setIntervenedCPTShell(fv.getDSLNodeType(), new TableShell(t));
+
 			return true;
 		}
-		return false;
+		else return false;
 	}
 
 	/** 
@@ -1035,7 +1069,12 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 	{
 		if( intervenedEdges.contains(Arrays.asList(from, to)) ) {
 			if( addEdge( from, to, false ) ) {
+				// remove edge from intervenedEdges set
 				intervenedEdges.remove( Arrays.asList(from, to));
+
+				// reset CPT to original CPT
+				FiniteVariable fv = (FiniteVariable) to;
+				fv.setUnintervenedCPTShell(fv.getDSLNodeType());
 				return true;
 			}
 		}

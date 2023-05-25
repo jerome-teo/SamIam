@@ -491,6 +491,10 @@ public class DisplayableBeliefNetworkImpl implements DisplayableBeliefNetwork
 		 myBeliefNetwork.fireAudit(          from,          to,            targets,              deed );
 		return this;
 	}
+	public void setIntervenedEdges(Set toCopyIntervenedEdges)
+	{
+		myBeliefNetwork.setIntervenedEdges(toCopyIntervenedEdges);
+	}
 	public Set getIntervenedEdges()
 	{
 		return myBeliefNetwork.getIntervenedEdges();

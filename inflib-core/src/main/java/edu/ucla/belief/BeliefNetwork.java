@@ -120,6 +120,9 @@ public interface BeliefNetwork extends DirectedGraph, Cloneable
 	/** @since 20091124 */
 	public BeliefNetwork fireAudit( Variable from, Variable to, Collection targets, Auditor.Deed deed );
 
+	/** Sets intervened edges to given list */
+	public void setIntervenedEdges(Set toCopyIntervenedEdges);
+
 	/** Returns intervened edges */
 	public Set getIntervenedEdges();
 

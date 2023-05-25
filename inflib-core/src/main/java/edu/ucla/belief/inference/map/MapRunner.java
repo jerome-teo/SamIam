@@ -52,8 +52,8 @@ public class MapRunner
 					InitializationMethod initializationMethod,int evaluations)
 	{
 
-                long iStart = System.currentTimeMillis ();
-                long istart_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
+		long iStart = System.currentTimeMillis ();
+		long istart_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
 
 		Set test=new HashSet(mapvars);
 		test.retainAll(evidence.keySet());
@@ -69,26 +69,24 @@ public class MapRunner
 		approximator.init(comp,mapvars);
 		MapApproximator.Instance instance= approximator.new Instance(initial);
 
-                long istop_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
-                long iStop = System.currentTimeMillis ();
-                long sStart = System.currentTimeMillis ();
-                long sstart_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
+		long istop_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
+		long iStop = System.currentTimeMillis ();
+		long sStart = System.currentTimeMillis ();
+		long sstart_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
 
 		approximator.run(instance,evaluations-penalty);
 
-                long sstop_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
-                long sStop = System.currentTimeMillis ();
+		long sstop_cpu_ms = JVMProfiler.getCurrentThreadCpuTimeMS();
+		long sStop = System.currentTimeMillis ();
 
 		myLastScore = approximator.bestInstance().score();
 
-      long iElapsed = iStop - iStart;
-      long iProfiled = istop_cpu_ms - istart_cpu_ms;
-      long sElapsed = sStop - sStart;
-      long sProfiled = sstop_cpu_ms - sstart_cpu_ms;
+		long iElapsed = iStop - iStart;
+		long iProfiled = istop_cpu_ms - istart_cpu_ms;
+		long sElapsed = sStop - sStart;
+		long sProfiled = sstop_cpu_ms - sstart_cpu_ms;
 
-		return
-                  new MapResult (
-                    iElapsed, iProfiled, sElapsed, sProfiled,
+		return new MapResult (iElapsed, iProfiled, sElapsed, sProfiled,
                     approximator.bestInstance().mapping(), myLastScore);
 
 	}

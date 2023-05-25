@@ -809,8 +809,8 @@ public class InputPanel extends javax.swing.JPanel implements java.awt.event.Act
 		//parent.panMain.add( new OutputPanel( result ), JSplitPane.RIGHT, 0 );
 		MPEPanel mpepanel = null;
 		if( result != null ){
-			mpepanel = new MPEPanel( result, score, "P(MAP,e)=", bn );
-			mpepanel.addResult( score / prE, "P(MAP|e)=" );
+			mpepanel = new MPEPanel( result, score, "P(MAP,e_obs|e_int)=", bn );
+			mpepanel.addResult( score / prE, "P(MAP|e_obs,e_int)=" );
 			if( flagUseExact ){
 				String message = ( isExact ) ? "Result is exact." : "Result is not exact.";
 				mpepanel.addMessage( message );

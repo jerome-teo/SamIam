@@ -683,6 +683,7 @@ public class EvidenceController implements Cloneable
 		if( FLAG_DEBUG ){ Definitions.STREAM_VERBOSE.println( "EvidenceController.clone()" ); }
 		EvidenceController ret = new EvidenceController( myBeliefNetwork );
 		ret.myMapObservations.putAll( myMapObservations );
+		ret.myMapInterventions.putAll( myMapInterventions );
 		ret.myEvidenceChangeListeners.addAll( myEvidenceChangeListeners );
 		ret.myPriorityEvidenceChangeListeners.addAll( myPriorityEvidenceChangeListeners );
 		ret.myRecentEvidenceChangeVariables.addAll( myRecentEvidenceChangeVariables );
