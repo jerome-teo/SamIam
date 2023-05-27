@@ -139,9 +139,19 @@ public interface BeliefNetwork extends DirectedGraph, Cloneable
 	public boolean addEdge( Variable from, Variable to, boolean expandCPT );
 
 	/**
+	 * Intervene on a node to modifying its CPT even if there are no incoming edges into the node. 
+	 */
+	public void interveneNode( Variable var );
+
+	/**
 	 * Removes edge without modifying CPT. Adds edge to intervenedEdges
 	 */
 	public boolean interveneEdge( Variable from, Variable to ); 
+
+	/** 
+	 * Unintervene node. Return node's CPT back to its original CPT. 
+	 */
+	public void uninterveneNode( Variable var );
 
 	/**
 	 * Adds edge without modifying CPT. Removes edge from intervenedEdges

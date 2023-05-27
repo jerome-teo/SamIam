@@ -511,9 +511,17 @@ public class DisplayableBeliefNetworkImpl implements DisplayableBeliefNetwork
 	//{
 	//	return myBeliefNetwork.expandTable(t,var);
 	//}
+	public void interveneNode( Variable var )
+	{
+		myBeliefNetwork.interveneNode( var );
+	}
 	public boolean interveneEdge( Variable from, Variable to )
 	{
 		return myBeliefNetwork.interveneEdge( from, to );
+	}
+	public void uninterveneNode( Variable var ) 
+	{
+		myBeliefNetwork.uninterveneNode( var );
 	}
 	public boolean uninterveneEdge( Variable from, Variable to )
 	{

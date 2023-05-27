@@ -1026,6 +1026,33 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 	}
 
 	/**
+	 * Intervene on a node to modifying its CPT even if there are no incoming edges into the node. 
+	 * @since 20230526
+	 */
+	public void interveneNode( Variable var ) 
+	{
+		if (!structure.contains(var)) {
+			throw new IllegalArgumentException("Doesn't contain that vertex");
+		}
+
+		FiniteVariable fv = (FiniteVariable) var;
+
+		// create new temp CPT for intervened variable 
+		double[] vals = new double[fv.size()];
+		java.util.Arrays.fill(vals, 0);
+		Table t = new Table( new ArrayList(Collections.singleton(fv)),vals );
+		Object[] intervenedVal = {myEvidenceController.getIntervenedValue(fv)};
+		TableIndex index = t.index();
+		Integer valIndex = index.index(intervenedVal);
+		t.setCP(valIndex, 1);
+		fv.setIntervenedCPTShell(fv.getDSLNodeType(), new TableShell(t));
+
+		if( myFlagAutoCPTInvalidation ) var.setProperty( InferenceValidProperty.PROPERTY, InferenceValidProperty.PROPERTY.FALSE );
+
+	}
+
+
+	/**
 	 * Removed edge from belief network without modifying CPT. If successfull, adds edge to set of 
 	 * intervenedEdges. 
 	 * @since 20230421
@@ -1043,21 +1070,19 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 			intervenedEdges.add( Arrays.asList(from, to));
 
 			FiniteVariable fv = (FiniteVariable) to;
-
-			// create new temp CPT for intervened variable 
-			double[] vals = new double[fv.size()];
-			java.util.Arrays.fill(vals, 0);
-			Table t = new Table( new ArrayList(Collections.singleton(fv)),vals );
-			Object[] intervenedVal = {myEvidenceController.getIntervenedValue(fv)};
-			TableIndex index = t.index();
-			Integer valIndex = index.index(intervenedVal);
-			t.setCP(valIndex, 1);
-
-			fv.setIntervenedCPTShell(fv.getDSLNodeType(), new TableShell(t));
-
 			return true;
 		}
 		else return false;
+	}
+
+	/** 
+	 * Unintervene node. Return node's CPT back to its original CPT. 
+	 * @since 20230526
+	 */
+	public void uninterveneNode( Variable var ) 
+	{
+		FiniteVariable fv = (FiniteVariable) var;
+		fv.setUnintervenedCPTShell(fv.getDSLNodeType());
 	}
 
 	/** 
@@ -1071,10 +1096,6 @@ public class BeliefNetworkImpl implements BeliefNetwork, PropertySuperintendent
 			if( addEdge( from, to, false ) ) {
 				// remove edge from intervenedEdges set
 				intervenedEdges.remove( Arrays.asList(from, to));
-
-				// reset CPT to original CPT
-				FiniteVariable fv = (FiniteVariable) to;
-				fv.setUnintervenedCPTShell(fv.getDSLNodeType());
 				return true;
 			}
 		}

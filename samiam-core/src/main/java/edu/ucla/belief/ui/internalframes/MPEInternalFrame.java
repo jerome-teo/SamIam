@@ -235,7 +235,7 @@ public class MPEInternalFrame extends javax.swing.JInternalFrame implements Evid
 			if( myProbabilityMPE >= (double)0 && myMapMPEinstantiation != null )
 			{
 				MPEPanel pnlMain = new MPEPanel( myProbabilityMPE, myMapMPEinstantiation, this.getBeliefNetwork(), /*flagAddCloseButton*/ false, /*flagAddCopyButtons*/ false );
-				if( flagProbabilitySupported ) pnlMain.addResult( myProbabilityMPE / prE, "P(mpe|e_obs,e_int)=" );
+				if( flagProbabilitySupported ) pnlMain.addResult( myProbabilityMPE / prE, "P(mpe|e\u2092,e\u1D62)=" );
 				//btnClose = pnlMain.addActionListener( this );
 				if( this.getParentFrame() != null ) pnlMain.setClipBoard( this.getParentFrame().getInstantiationClipBoard(), this.getBeliefNetwork().getEvidenceController() );
 				//myButtonCodeBandit = pnlMain.addButton( "Code Bandit", this );

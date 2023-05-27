@@ -41,6 +41,11 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 		this.myMappedListInstances = (MappedList) ((MappedList)toCopy.instances()).clone();
 		//this.myCPTShell = (CPTShell) toCopy.getCPTShell().clone();
 		this.myMapTypesToShells = deepCloneMapTypesToShells( toCopy );
+		if (toCopy.isIntervened()) {
+			double[] vals = toCopy.getCPTShell(myDSLNodeType, false).getCPT().dataclone();
+			Table t = new Table(new ArrayList<>(Collections.singleton(this)), vals);
+			this.setIntervenedCPTShell(myDSLNodeType, new TableShell(t));
+		}
 	}
 
 	/** @author keith cascio
@@ -85,10 +90,9 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 		CPTShell shell;
 		for( int i=0; i<types.length; i++ ){
 			type = types[i];
-			shell = toCopy.getCPTShell( type );
+			shell = toCopy.getCPTShell( type, true );
 			if( shell != null ) ret.put( type, shell.clone() );
 		}
-
 		return ret;
 	}
 
@@ -204,6 +208,16 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 	public void setUnintervenedCPTShell( DSLNodeType type ){
 		setCPTShell( type, savedCPT );
 		savedCPT = null;
+	}
+
+	/** @since 20230525 */
+	public boolean isIntervened() {
+		return savedCPT != null;
+	}
+
+	/** @since 20230526 */
+	public void setSavedCPT(CPTShell shell) {
+		savedCPT = shell;
 	}
 
 	/** @since 010905 */

@@ -53,7 +53,7 @@ public class MPEPanel extends JPanel implements ActionListener, SloppyPanel.Jump
 
 	/** @since 20051102 */
 	public MPEPanel( double result, Map instantiation, Collection variables, boolean flagAddCloseButton, boolean flagAddCopyButtons ){
-		init( instantiation, result, "P(mpe,e_obs|e_int)=", flagAddCloseButton, flagAddCopyButtons, variables );
+		init( instantiation, result, "P(mpe,e\u2092|e\u1D62)=", flagAddCloseButton, flagAddCopyButtons, variables );
 		this.myScore = result;
 	}
 
@@ -66,9 +66,9 @@ public class MPEPanel extends JPanel implements ActionListener, SloppyPanel.Jump
 		this.myMapResultToOutputPanels = new HashMap( results.results.size() );
 		this.myIndexCurrentResult = 0;
 		MapSearch.MapResult result = (MapSearch.MapResult) results.results.get( myIndexCurrentResult );
-		OutputPanel plnOut = init( result.getConvertedInstatiation(), result.score, "P(MAP,e_obs|e_int)=", false, true, variables );
+		OutputPanel plnOut = init( result.getConvertedInstatiation(), result.score, "P(MAP,e\u2092|e\u1D62)=", false, true, variables );
 		myMapResultToOutputPanels.put( result, plnOut );
-		this.myLabelScoreConditioned = addResult( result.score/myPrE, "P(MAP|e_obs,e_int)=" );
+		this.myLabelScoreConditioned = addResult( result.score/myPrE, "P(MAP|e\u2092,e\u1D62)=" );
 		this.myLabelFinished = addMessage( InputPanel.getMessageFinished( results ) );
 		if( results.results.size() > 1 ){
 			initSloppyNavigation();

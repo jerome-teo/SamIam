@@ -3094,7 +3094,7 @@ public class NetworkDisplay extends JInternalFrame implements
 			if( ec.isIntervention( var ) ){
 				intervenedVars.add( var );
 			} 
-			else if ( !ec.isObservation( var ))
+			else
 			{
 				unintervenedVars.add( var );
 			}
@@ -3248,6 +3248,7 @@ public class NetworkDisplay extends JInternalFrame implements
 		//look for new edges
 		if( ev.eventType == NetStructureEvent.EDGE_ADDED )
 		{
+			Set intervenedEdges = new HashSet();
 			for( Iterator itr = bn.vertices().iterator(); itr.hasNext();)
 			{
 				DisplayableFiniteVariable fv_out = (DisplayableFiniteVariable)itr.next();
@@ -3271,8 +3272,15 @@ public class NetworkDisplay extends JInternalFrame implements
 						if( st == null || en == null ){ System.err.println( "warning: NetworkDisplay.netStructureChanged() encountered missing NodeLabel(s)" ); }
 						else{ makeArrow( st, en, false ); }
 					}
+
+					// if new edge is pointing to an intervened node, also intervene the edge
+					if (bn.getEvidenceController().isIntervention(fv_in)) {
+						intervenedEdges.add(fv_in);
+					}
 				}
 			}
+
+			this.hnInternalFrame.netStructureChanged(new NetStructureEvent(NetStructureEvent.INTERVENE_EDGE, intervenedEdges));
 
 			try{
 				synchronized( mySynchronizationEdgeList ){
@@ -3307,6 +3315,9 @@ public class NetworkDisplay extends JInternalFrame implements
 			for( Iterator fv_itr = ev.finiteVars.iterator(); fv_itr.hasNext(); )
 			{
 				DisplayableFiniteVariable fv_in = (DisplayableFiniteVariable)fv_itr.next();
+				// set CPT of fv_in to intervened CPT 
+				bn.interveneNode(fv_in);
+				// find all incoming edges 
 				Set in = new HashSet(bn.inComing(fv_in));
 				for( Iterator in_itr = in.iterator(); in_itr.hasNext();)
 				{
@@ -3334,6 +3345,8 @@ public class NetworkDisplay extends JInternalFrame implements
 			for( Iterator fv_itr = ev.finiteVars.iterator(); fv_itr.hasNext(); )
 			{
 				DisplayableFiniteVariable fv_in = (DisplayableFiniteVariable)fv_itr.next();
+				// reset CPT of fv_in back to original CPT 
+				bn.uninterveneNode(fv_in);
 
 				synchronized( mySynchronizationEdgeList ){
 					Set intervenedEdges = new HashSet(myBeliefNetwork.getIntervenedEdges());

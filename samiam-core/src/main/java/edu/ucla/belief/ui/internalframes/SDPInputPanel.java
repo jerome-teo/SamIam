@@ -698,8 +698,8 @@ public class SDPInputPanel extends javax.swing.JPanel implements java.awt.event.
 		//parent.panMain.add( new OutputPanel( result ), JSplitPane.RIGHT, 0 );
 		MPEPanel mpepanel = null;
 		if( result != null ){
-			mpepanel = new MPEPanel( result, score, "P(MAP,e_obs|e_int)=", bn );
-			mpepanel.addResult( score / prE, "P(MAP|e_obs,e_int)=" );
+			mpepanel = new MPEPanel( result, score, "P(MAP,e\u2092|e\u1D62)=", bn );
+			mpepanel.addResult( score / prE, "P(MAP|e\u2092,e\u1D62)=" );
 			if( flagUseExact ){
 				String message = ( isExact ) ? "Result is exact." : "Result is not exact.";
 				mpepanel.addMessage( message );
