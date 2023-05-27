@@ -206,8 +206,12 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 
 	/** @since 20230524 */
 	public void setUnintervenedCPTShell( DSLNodeType type ){
-		setCPTShell( type, savedCPT );
-		savedCPT = null;
+		// possible to set a previous unintervened node multiples times 
+		// make sure to only do it once
+		if (savedCPT != null) {
+			setCPTShell( type, savedCPT );
+			savedCPT = null;
+		}
 	}
 
 	/** @since 20230525 */
