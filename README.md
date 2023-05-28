@@ -6,15 +6,11 @@ It contains two directories:
 - samiam: source code of the SamIam software
 
 How to build and run: 
-If on Linux, run the following command. 
+Run the following command. 
 ```
 ./gradlew run
 ```
 
-If on Windows, run the following command. 
-```
-./gradlew.bat run
-```
 
 Feedback, bug reports, and questions can be sent to the email address 
     samiam@cs.ucla.edu
