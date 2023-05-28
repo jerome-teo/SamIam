@@ -200,13 +200,17 @@ public class FiniteVariableImpl extends VariableImpl implements FiniteVariable
 
 	/** @since 20230524 */
 	public void setIntervenedCPTShell( DSLNodeType type, CPTShell shell ){
-		savedCPT = (CPTShell) myMapTypesToShells.get( type );
-		setCPTShell( type, shell );
+		// possible to set a previously intervened node multiples times 
+		// make sure to only do it once
+		if (savedCPT == null) {
+			savedCPT = (CPTShell) myMapTypesToShells.get( type );
+			setCPTShell( type, shell );
+		}
 	} 
 
 	/** @since 20230524 */
 	public void setUnintervenedCPTShell( DSLNodeType type ){
-		// possible to set a previous unintervened node multiples times 
+		// possible to set a previously unintervened node multiples times 
 		// make sure to only do it once
 		if (savedCPT != null) {
 			setCPTShell( type, savedCPT );
