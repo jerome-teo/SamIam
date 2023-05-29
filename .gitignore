@@ -5,3 +5,4 @@
 /samiam-ui/samiamrc.xml
 **/*.class
 /samiam-ui/bin
+samiamrc.xml
