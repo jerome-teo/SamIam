@@ -104,9 +104,9 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 	  PATTERN_DEBUG, PATTERN_NOSPLASH;
 
 	public    static final String
-	  PATH_HTML_HELP_INDEX               = "htmlhelp" + File.separator + "index.html",
-	  URL_HTML_HELP_INDEX                = "file:" + PATH_HTML_HELP_INDEX,
-	  PATH_HTML_HELP_CODETOOL            = "htmlhelp" + File.separator + "codebandit.html",
+	  PATH_HTML_HELP_INDEX               = "app/htmlhelp" + File.separator + "index.html",
+	  URL_HTML_HELP_INDEX                = "file://" + PATH_HTML_HELP_INDEX,
+	  PATH_HTML_HELP_CODETOOL            = "app/htmlhelp" + File.separator + "codebandit.html",
 	  URL_HELP_LIVE                      = "http://reasoning.cs.ucla.edu/samiam/help/",
 	  URL_ARGROUP                        = "http://reasoning.cs.ucla.edu/",
 	  URL_SAMIAM                         = "http://reasoning.cs.ucla.edu/samiam/",
@@ -152,6 +152,8 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 		Dimension dimension                       = null;
 		java.io.PrintStream argumentMessageStream = System.out;
 		List      actions                         = null;
+
+		Util.setAppPath();
 
 		for( int i=0; i < args.length; i++ )
 		{
@@ -296,6 +298,7 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 		}
 
 		UI ui = new UI( filePreferences );
+		ui.setIconImage(MainToolBar.getIcon("SamIamAppIcon.png").getImage());
 		if( dimension != null ){ ui.setSize( dimension ); }
 		Util.centerWindow( ui );
 		STATIC_REFERENCE = ui;
@@ -734,8 +737,6 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 			public void actionPerformed( ActionEvent e ){
 				getActiveHuginNetInternalFrame().sdpTool();
 			}
-
-		
 		};
        
 		action_MPE = new ModalAction( "MPE", "MPE Computation", 'p', MainToolBar.getIcon( MPEInternalFrame.STR_FILENAME_ICON ) )
@@ -1211,7 +1212,7 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 		{
 			public void actionPerformed( ActionEvent e ){
 				setWaitCursor();
-				BrowserControl.displayRelativePath( PATH_HTML_HELP_INDEX );
+				BrowserControl.displayFolder(Util.appLibPath);
 				setDefaultCursor();
 			}
 		};
@@ -1646,13 +1647,13 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 		if( flag && (UI.FLAG_FORCE_WELCOME /*|| (! mySamiamPreferences.wasFileIOSuccessful())*/) ){ showTutorialsDialog( true ); }
 	}
 
-	/** @arg flag Sets whether the JVM should terminate when the user closes SamIam.  Set this to false if you call SamIam from another Java program and you want to prevent Java from exiting when the user exits SamIam.
+	/** @param flag Sets whether the JVM should terminate when the user closes SamIam.  Set this to false if you call SamIam from another Java program and you want to prevent Java from exiting when the user exits SamIam.
 		@since 20040210 */
 	public void setSystemExitEnabled( boolean flag ){
 		myFlagSystemExitEnabled = flag;
 	}
 
-	/** @ret true if a user action that closes SamIam will cause the JVM to terminate as well.
+	/** @return true if a user action that closes SamIam will cause the JVM to terminate as well.
 		@since 20040210 */
 	public boolean isSystemExitEnabled(){
 		return myFlagSystemExitEnabled;
@@ -1897,7 +1898,7 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 		//Help menu
 		helpMenu.add( action_HELPLOCAL ).setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F1, (int)0 ) );
 		helpMenu.add( action_HELPLIVE );
-		helpMenu.add( action_TUTORIALS ).setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F12, (int)0 ) );
+//		helpMenu.add( action_TUTORIALS ).setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_F12, (int)0 ) );
 		helpMenu.add( action_TUTORIALSLIVE );
 		if( FileSystemUtil.getAPIAction() != null ) helpMenu.add( FileSystemUtil.getAPIAction() );
 		helpMenu.addSeparator();
@@ -3165,7 +3166,7 @@ public class UI extends JFrame implements SamiamUIInt, ActionListener, WindowLis
 	}
 
 	/**
-		@ret true if a file with path selectedPath is already open.
+		@return true if a file with path selectedPath is already open.
 		@since 021004
 	*/
 	public boolean pathConflicts( String selectedPath ){

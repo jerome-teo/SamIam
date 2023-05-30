@@ -19,9 +19,6 @@ group = parent!!.group
 version = parent!!.version
 val shadowJarName = "${project.name}-${version}-all.jar"
 
-println("${parent!!.version} parent!!.version")
-println("${version} version")
-
 task("packageNetworkSamples", Copy::class) {
     group = "distribution"
     from("${rootDir}/network_samples").into("$buildDir/package/network_samples")
@@ -31,9 +28,28 @@ task("packageShadowJar", Copy::class) {
     dependsOn("shadowJar")
     from("${buildDir}/libs/$shadowJarName").into("$buildDir/package")
 }
-
+task("packageInflibJavadoc", Copy::class) {
+    group = "distribution"
+    dependsOn(":inflib:javadoc")
+    from("${rootDir}/inflib/build/docs/javadoc").into("$buildDir/package/inflib_javadoc")
+}
+task("packageSamIamJavadoc", Copy::class) {
+    group = "distribution"
+    dependsOn(":samiam:javadoc")
+    from("${rootDir}/samiam/build/docs/javadoc").into("$buildDir/package/samiam_javadoc")
+}
+task("packageHtmlHelp", Copy::class) {
+    group = "distribution"
+    from("${rootDir}/htmlhelp").into("$buildDir/package/htmlhelp")
+}
 tasks.jpackage {
-    dependsOn("packageNetworkSamples", "packageShadowJar")
+    dependsOn(
+        "packageNetworkSamples",
+        "packageShadowJar",
+        "packageSamIamJavadoc",
+        "packageInflibJavadoc",
+        "packageHtmlHelp"
+    )
     group = "distribution"
 
     input = "build/package"
@@ -44,6 +60,7 @@ tasks.jpackage {
 
     mainJar = shadowJarName
     mainClass = main
+    icon = "${projectDir}/src/main/resources/images/SamIamAppIcon.png"
 
     javaOptions = listOf("-Dfile.encoding=UTF-8")
 
@@ -53,9 +70,12 @@ tasks.jpackage {
         winDirChooser = true
         appName = project.name
         winShortcutPrompt = true
+        icon = "${projectDir}/src/main/resources/images/SamIamAppIcon-White.ico"
     }
     linux {
         type = ImageType.DEFAULT
+        linuxShortcut = true
+        linuxAppCategory = "SamIam"
     }
     mac {
         type = ImageType.DMG
@@ -87,7 +107,22 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }
-
+tasks.javadoc {
+    options {
+        this as StandardJavadocDocletOptions
+        tags(
+            "from",
+            "changed",
+            "decision",
+            "precondition",
+            "postcondition",
+            "pq",
+            "param-missing", //parameters in the javadoc that aren't present in the code
+        )
+        addBooleanOption("Xdoclint:none", true)
+        addStringOption("Xmaxwarns", "1")
+    }
+}
 tasks.test {
     useJUnitPlatform()
     testLogging {
